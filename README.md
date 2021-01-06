@@ -1,2 +1,7 @@
 # gas_linebot_googlecalender
 Googleカレンダーと連携したスケジュール管理LineBot
+
+Google Apps Script上に本リポジトリのファイルをコピーしてデプロイし、
+LineBotのWebhookの設定をデプロイしたURLにすると、スケジュール管理できる。
+
+Constant.gsにて個別設定は必要。
