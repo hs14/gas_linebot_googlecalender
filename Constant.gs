@@ -4,15 +4,8 @@
 
 // アクセスキー
 const CONSTANT = {
-  CHANNEL_ACCESS_TOKEN: '{チャネルアクセストークン}',
-  CALENDER_ID         : '{カレンダーID}'
+  CHANNEL_ACCESS_TOKEN: '{チャネルアクセストークン}'
 };
-
-// 送信先ユーザID (= 許可リスト)
-const userIds = [
-  '{ユーザID}',
-  '{ユーザID}'
-]
 
 // トリガーとなるユーザからのメッセージ
 const TRIGGER_MESSAGES = {
@@ -20,6 +13,18 @@ const TRIGGER_MESSAGES = {
   CHECK_SCHEDULE: '予定を確認したい',
   REGISTER      : '予定を登録したい',
   DELETE        : '予定を削除したい',
+}
+
+// ユーザIDとGoogleカレンダーIDのマッピング
+const user_calender_map = {
+  {LineユーザID}: CalendarApp.getCalendarById('{GoogleカレンダーID}'),
+  {LineユーザID}: CalendarApp.getCalendarById('{GoogleカレンダーID}')
+}
+
+// ユーザIDと名前のマッピング
+const user_name_map = {
+  {LineユーザID}: '{名前}',
+  {LineユーザID}: '{名前}'
 }
 
 
@@ -41,5 +46,5 @@ const MODE = {
   DELETE_CONFIRM     : 'delete_confirm'
 }
 
-// Googleカレンダーオブジェクト
-let myCalender = CalendarApp.getCalendarById(CONSTANT.CALENDER_ID);
+// ユーザIDリスト
+const allowed_id_list = Object.keys(user_calender_map)

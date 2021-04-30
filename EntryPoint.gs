@@ -56,3 +56,42 @@ function doPost(e) {
   return 200;
   
 }
+
+// -----------------------------
+//  1日の予定を送信するトリガーイベント
+// -----------------------------
+
+function sendTodaySchedule() {
+
+  let message = ''
+  message = message + '今日の予定をお知らせするよ！\n';
+
+  for(let userId of allowed_id_list) {
+    message = message + getTodaySchedule(userId);
+    message = message + '\n';
+  }
+
+  userIds.forEach(function(value){
+    push(value, message)
+  });
+}
+
+
+// -----------------------------
+//  1週間の予定を送信するトリガーイベント
+// -----------------------------
+
+function sendWeekSchedule() {
+
+  let message = ''
+  message = message + '1週間の予定をお知らせするよ！\n';
+
+  for(let userId of allowed_id_list) {
+    message = message + getDaysSchedule(userId, 7);
+    message = message + '\n';
+  }
+
+  userIds.forEach(function(value){
+    push(value, message)
+  });
+}

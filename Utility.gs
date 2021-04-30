@@ -124,7 +124,7 @@ function pushQuickReply(userId, num) {
 function checkAuth(userId) {
 
   errorMessage = '';
-  if (userIds.indexOf(userId) == -1) {
+  if (allowed_id_list.indexOf(userId) == -1) {
     errorMessage = errorMessage + 'あなたはこのbotの使用を許可されていません。\n';
     errorMessage = errorMessage + '管理者に問い合わせてください。'
   }

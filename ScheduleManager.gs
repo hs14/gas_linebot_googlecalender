@@ -2,26 +2,26 @@
 //  今日の予定を取得する
 // -----------------------------
 
-function getTodaySchedule() {
+function getTodaySchedule(userId) {
 
   // 予定格納用のリスト
   let plans = [];
 
   // 予定を取得
-  let todayEvents = myCalender.getEventsForDay(new Date());
+  let todayEvents = user_calender_map[userId].getEventsForDay(new Date());
 
   // イベント情報を整形
   todayEvents.forEach(function(value){
     let title   = value.getTitle();
     let start   = Utilities.formatDate(value.getStartTime(), 'JST', 'HH:mm');
     let end     = Utilities.formatDate(value.getEndTime(), 'JST', 'HH:mm');
-    let strInfo = '[' + start + '-' + end + '] ' + title
+    let strInfo = '[' + user_name_map[userId] + '] ' + start + '-' + end + ' ' + title
     plans.push(strInfo)
   });
 
   // 配列を文字列に変換する。要素数が0の場合は専用の文字列に変換。
   if (plans.length == 0) {
-    return '今日は予定がないようです (゜Д゜)';
+    return '[' + user_name_map[userId] + '] ' + '今日は予定がないようです (゜Д゜)';
   } else {
     return plans.join('\n');
   }
@@ -32,14 +32,14 @@ function getTodaySchedule() {
 //  指定の日付の予定を取得する
 // -----------------------------
 
-function getDaySchedule(strDate, isForDelete=Boolean('')) {
+function getDaySchedule(userId, strDate, isForDelete=Boolean('')) {
 
   // 予定格納用のリスト
   let plans = [];
 
   // 予定を取得
   let date = strToDate(strDate);
-  let events = myCalender.getEventsForDay(date);
+  let events = user_calender_map[userId].getEventsForDay(date);
 
   // キャッシュに登録する
   setEventsNum(events.length);
@@ -78,11 +78,11 @@ function getDaySchedule(strDate, isForDelete=Boolean('')) {
 //  削除モードの場合は削除する
 // -----------------------------
 
-function getDayEventSchedule(strDate, num, isForDelete=Boolean('')) {
+function getDayEventSchedule(userId, strDate, num, isForDelete=Boolean('')) {
 
   // 予定を取得
   let date = strToDate(strDate);
-  let events = myCalender.getEventsForDay(date);
+  let events = user_calender_map[userId].getEventsForDay(date);
 
   // イベント情報を整形
   let event = events[num - 1];
@@ -104,7 +104,7 @@ function getDayEventSchedule(strDate, num, isForDelete=Boolean('')) {
 //  指定の日付後までの予定を取得する
 // -----------------------------
 
-function getDaysSchedule(dayNum) {
+function getDaysSchedule(userId, dayNum) {
 
   // 予定格納用のリスト
   let plans = [];
@@ -112,7 +112,7 @@ function getDaysSchedule(dayNum) {
   // 予定を取得
   let startDate  = new Date()
   let endDate    = new Date(Date.parse(startDate) + (dayNum * 60 * 60 * 24 * 1000));
-  let events = myCalender.getEvents(startDate, endDate);
+  let events = user_calender_map[userId].getEvents(startDate, endDate);
 
   // イベント情報を整形
   events.forEach(function(value){
@@ -120,13 +120,14 @@ function getDaysSchedule(dayNum) {
     let date    = Utilities.formatDate(value.getStartTime(), 'JST', 'MM/dd');
     let start   = Utilities.formatDate(value.getStartTime(), 'JST', 'HH:mm');
     let end     = Utilities.formatDate(value.getEndTime(), 'JST', 'HH:mm');
-    let strInfo = '[' + date + ' ' + start + '-' + end + '] ' + title
+    let strInfo = '[' + user_name_map[userId] + '] ' + date + ' ' + start + '-' + end + ' ' + title;
+    //let strInfo = '[' + date + ' ' + start + '-' + end + '] ' + title
     plans.push(strInfo)
   });
 
   // 配列を文字列に変換する。要素数が0の場合は専用の文字列に変換。
   if (plans.length == 0) {
-    return 'しばらく予定がないようです (゜Д゜)';
+    return '[' + user_name_map[userId] + '] ' + 'しばらく予定がないようです (゜Д゜)';
   } else {
     return plans.join('\n');
   }
@@ -135,42 +136,10 @@ function getDaysSchedule(dayNum) {
 
 
 // -----------------------------
-//  今日の予定を送信する
-// -----------------------------
-
-function sendTodaySchedule() {
-
-  let message = ''
-  message = message + '今日の予定をお知らせするよ！\n';
-  message = message + getTodaySchedule();
-
-  userIds.forEach(function(value){
-    push(value, message)
-  });
-}
-
-
-// -----------------------------
-//  1週間の予定を送信する
-// -----------------------------
-
-function sendWeekSchedule() {
-
-  let message = ''
-  message = message + '1週間の予定をお知らせするよ！\n';
-  message = message + getDaysSchedule(7);
-
-  userIds.forEach(function(value){
-    push(value, message)
-  });
-}
-
-
-// -----------------------------
 //  キャッシュのデータで予定を登録する
 // -----------------------------
 
-function registerSchedule() {
+function registerSchedule(userId) {
 
   let title     = getTitle()
   let date      = getYear() + '/' + getMonth() + '/' + getDay() + ' ';
@@ -183,7 +152,7 @@ function registerSchedule() {
   }
 
   // 登録
-  myCalender.createEvent(title, startDate, endDate);
+  user_calender_map[userId].createEvent(title, startDate, endDate);
   return '登録しました';
 
 }
@@ -192,10 +161,10 @@ function registerSchedule() {
 //  キャッシュのデータで予定を削除する
 // -----------------------------
 
-function deleteSchedule() {
+function deleteSchedule(userId) {
 
   let date = getYear() + '/' + getMonth() + '/' + getDay() + ' ';
-  getDayEventSchedule(date, getEventNo(), Boolean('true'));
+  getDayEventSchedule(userId, date, getEventNo(), Boolean('true'));
 
   return '削除しました';
 
